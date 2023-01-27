@@ -3,22 +3,22 @@ import tkinter as tk
 import numpy as np
 
 from constants import *
-from sun_path import points_of_circle
+import sun_path
 from get_coords import get_coords_panel, get_coords_sun
 from panel import SolarPanel
 
 # Initialization
-origin: int = 400
-distance: int = 200
-t:  float = 0.00       
+origin:   int     = 400
+distance: int     = 200
+t:        float   = 0.0      
 
-def create_animation_window() -> object:
+def create_animation_window():
   Window = tk.Tk()
   Window.title("Solar panel follows sun")
   Window.geometry(f'{Window_Width}x{Window_Height}')
   return Window
 
-def create_animation_canvas(Window: object) -> object:
+def create_animation_canvas(Window: object):
   canvas = tk.Canvas(Window)
   canvas.configure(bg="White")
   canvas.pack(fill="both", expand=True)
@@ -50,54 +50,41 @@ def main(Window: object, canvas: object):
         fill='blue',
         arrow=tk.LAST) 
 
-  # get coords of the panel
-  (xPanel, yPanel) = get_coords_panel(canvas, solar_panel)
-
-  # generate circular path
-  pathSun: list[tuple] = points_of_circle(distance, xPanel, yPanel)
-
   # init
   k: int = 0
-  call_plant = SolarPanel(dt) # assign
+  panel = SolarPanel() 
+  (xPanel, yPanel) = get_coords_panel(canvas, solar_panel)
+  sun_ = sun_path.Sun(distance, xPanel, yPanel)
   coordX = 600 # arrow endpoint
   coordY = 600 # arrow endpoint
-  # errorX_prev = 0 
-  # errorY_prev = 0 
 
   while True:
-
-    # null the index 
-    if k == len(pathSun):
-      k = 0
 
     # get coords of the sun
     (oldX, oldY) = get_coords_sun(canvas, sun)
 
     # move sun to a new position
-    (newX, newY) = pathSun[k]
+    (newX, newY) = sun_.sun_step()
     dx: int = newX - oldX
     dy: int = newY - oldY
     canvas.move(sun, dx, dy)
 
-    # controller
-    # from pi_controller import control
-    # errorX = newX-coordX
-    # errorY = newY-coordY
-    # --> convert errorXY to errorTheta
-    # voltage = controller(error, error_prev)
-    # error_prev = error
-
     # solve and update angle of the panel
-    theta = call_plant.derive_angle()
+    thetaSun = sun_.thetaSun
+    theta = panel.derive_angle(thetaSun)
     lenX: float = np.sin(theta) * distance
     lenY: float = np.cos(theta) * distance
     coordX = np.abs(origin - lenX)
     coordY = np.abs(origin - lenY)
-    canvas.coords(arrow, 400, 400, coordX, coordY)
+    canvas.coords(arrow, origin, origin, coordX, coordY)
   
     # Update GUI
     Window.update()
     time.sleep(dt)
+
+    # Update time
+    global t
+    t += dt
 
 
 if __name__ == "__main__":

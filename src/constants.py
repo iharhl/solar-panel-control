@@ -5,7 +5,7 @@ radiusPanel:  int         = 15
 radius:       list[int]   = [radiusSun, radiusPanel]
 
 # Time step [s]
-dt: float = 0.02 
+dt: float = 0.00001 
 
 # Window dimensions
 Window_Width:   int = 800

@@ -1,5 +1,14 @@
-from constants import *
+import constants as c
+    
+class PiController:
 
-def control(error: float, error_prev: float) -> float:
-    output: float = error * Kp + (error_prev + error * dt) * Ki
-    return output
+    def __init__(self):
+        self.P_term:    float = 0.0
+        self.I_term:    float = 0.0
+        self.command:   float = 0.0
+
+    def pi_step(self, err: float):
+        self.P_term = c.Kp * err
+        self.I_term  += c.Ki * err * c.dt
+        self.command = self.P_term + self.I_term
+        return self.command
