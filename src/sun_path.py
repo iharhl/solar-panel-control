@@ -1,4 +1,5 @@
 import numpy as np 
+import constants as c
 
 class Sun:
 
@@ -16,11 +17,14 @@ class Sun:
     return np.radians(self.anglePath[self.step])
 
   def generate_path(self):
-    for angle in np.arange(0.0, 360.0, 0.01):
+    for angle in np.arange(0.0, 360.0, 0.001):
       x: int = int(self.r * np.sin(np.radians(angle)) + self.a)
       y: int = int(self.r * np.cos(np.radians(angle)) + self.b)
       self.circularPath.append((x,y))
       self.anglePath.append(angle)
+    ## TODO set step to 180 deg
+    self.step = len(self.circularPath)//2
+    print(len(self.circularPath))
 
   def sun_step(self):
     self.step += 1

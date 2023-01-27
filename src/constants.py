@@ -1,3 +1,6 @@
+import math
+
+PI = math.pi
 
 # Radius for canvas objects
 radiusSun:    int         = 30
@@ -12,8 +15,8 @@ Window_Width:   int = 800
 Window_Height:  int = 800
 
 # Controller gains
-Kp: int = 240
-Ki: int = 180
+Kp: int = 240 * 50
+Ki: int = 180 * 50
 
 # Motor parameters
 L: float = 1e-5         # Inductance, [H]

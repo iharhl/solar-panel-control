@@ -20,6 +20,11 @@ class SolarPanel:
         self.theta += self.theta_dot * c.dt
 
     def derive_angle(self, thetaSun: float) -> float:
+        ## TODO correct the mis-match between thetas
+        thetaSun += c.PI  
+        if thetaSun > c.PI * 2:
+            thetaSun -= c.PI * 2
+        ##
         voltage = self.piController.pi_step(thetaSun - self.theta)
         self.T = self.panelMotor.motor_step(self.theta_dot, voltage)
         self.panel_step()
