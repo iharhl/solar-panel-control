@@ -67,6 +67,9 @@ def main(Window, canvas):
   coordX = 600 # arrow endpoint
   coordY = 600 # arrow endpoint
 
+  # Sub-steps 
+  k = 0
+
   # main loop
   while True:
 
@@ -95,10 +98,13 @@ def main(Window, canvas):
     # Update motor param label
     simVolt.configure(text=f"Motor voltage: {str(round(log.m_voltage,5))} V")
     simAmps.configure(text=f"Motor current: {str(round(log.m_current,5))} A")
-  
-    # Update GUI
-    Window.update()
-    time.sleep(dt)
+    
+    # Update GUI every 200 steps
+    if k > 500:
+      Window.update()
+      time.sleep(dt)
+      k = 0
+    k += 1
 
 
 if __name__ == "__main__":

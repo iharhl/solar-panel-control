@@ -14,10 +14,14 @@ class Sun:
 
   @property
   def thetaSun(self): 
+    """ This theta does not match the theta in simulation -> fix"""
     return np.radians(self.anglePath[self.step])
 
   def generate_path(self):
-    for angle in np.arange(0.0, 360.0, 0.001):
+    _min_angle = 140.0
+    _max_angle = 240.0
+    _incr_angle = 0.0001
+    for angle in np.arange(_min_angle, _max_angle, _incr_angle):
       x: int = int(self.r * np.sin(np.radians(angle)) + self.a)
       y: int = int(self.r * np.cos(np.radians(angle)) + self.b)
       self.circularPath.append((x,y))
@@ -27,6 +31,6 @@ class Sun:
 
   def sun_step(self):
     self.step += 1
-    if self.step > len(self.circularPath):
+    if self.step >= len(self.circularPath):
       self.step = 0
     return self.circularPath[self.step]

@@ -11,4 +11,11 @@ class PiController:
         self.P_term = c.Kp * err
         self.I_term  += c.Ki * err * c.dt
         self.command = self.P_term + self.I_term
+
+        # Saturate controller output (voltage)
+        if self.command > 50:
+            self.command = 50
+        elif self.command < -50:
+            self.command = -50
+
         return self.command
