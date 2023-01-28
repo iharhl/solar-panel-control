@@ -24,7 +24,6 @@ class Sun:
       self.anglePath.append(angle)
     ## TODO set step to 180 deg
     self.step = len(self.circularPath)//2
-    print(len(self.circularPath))
 
   def sun_step(self):
     self.step += 1

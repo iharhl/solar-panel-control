@@ -2,6 +2,7 @@ import time
 import tkinter as tk
 import numpy as np
 from constants import *
+import logging as log
 import sun_path
 from get_coords import get_coords_panel, get_coords_sun
 from panel import SolarPanel
@@ -16,27 +17,33 @@ def create_animation_window():
   Window.geometry(f'{Window_Width}x{Window_Height}')
   return Window
 
-def create_animation_canvas(Window: object):
+def create_animation_canvas(Window):
   canvas = tk.Canvas(Window)
   canvas.configure(bg="White")
   canvas.pack(fill="both", expand=True)
   return canvas
 
-def main(Window: object, canvas: object):
+def main(Window, canvas):
 
   # Simulation time
   simTime = tk.Label()
   simTime.place(x=50, y=80)
 
+  # Motor param 
+  simVolt = tk.Label()
+  simVolt.place(x=50, y=100) 
+  simAmps = tk.Label()
+  simAmps.place(x=50, y=120)
+
   # create canvas objects
-  sun: object = canvas.create_oval(
+  sun = canvas.create_oval(
     400-radius[0],
     400-radius[0],
     400+radius[0],
     400+radius[0],
     fill="Yellow", outline="Black", width=2)
   
-  solar_panel: object = canvas.create_oval(
+  solar_panel = canvas.create_oval(
     400-radius[1],
     400-radius[1],
     400+radius[1],
@@ -81,9 +88,13 @@ def main(Window: object, canvas: object):
     coordY = np.abs(origin - lenY)
     canvas.coords(arrow, origin, origin, coordX, coordY)
 
-    # Update time
+    # Update time label
     t += dt
     simTime.configure(text=f"Simulation time: {str(round(t,5))} sec")
+
+    # Update motor param label
+    simVolt.configure(text=f"Motor voltage: {str(round(log.m_voltage,5))} V")
+    simAmps.configure(text=f"Motor current: {str(round(log.m_current,5))} A")
   
     # Update GUI
     Window.update()
